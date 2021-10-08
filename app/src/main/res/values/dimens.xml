@@ -4,5 +4,6 @@
     <dimen name="standartText"> 20sp </dimen>
     <dimen name="mediumText"> 25sp </dimen>
     <dimen name="bigText"> 30sp </dimen>
+    <dimen name="standardMargin">15dp</dimen>
 
 </resources>
