@@ -1,2 +1,3 @@
+include ':pomodoro'
 rootProject.name = "Tatar_Timer"
 include ':app'
