@@ -6,4 +6,62 @@
     android:layout_height="match_parent"
     tools:context=".stopwatch">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintHorizontal_weight="0"
+        app:layout_constraintVertical_weight="0">
+
+
+        <TextView
+            android:id="@+id/tv_stopwatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standardMargin"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/standartPadding"
+            android:text="@string/test"
+            android:textSize="@dimen/bigText" />
+
+        <Button
+            android:id="@+id/btn_startAndStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textSize="@dimen/standartText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCurrentCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/test"
+                android:textSize="@dimen/standartText" />
+
+            <Button
+                android:id="@+id/btn_chooseCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0"
+                android:text="@string/test"
+                android:layout_margin="@dimen/standardMargin"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
