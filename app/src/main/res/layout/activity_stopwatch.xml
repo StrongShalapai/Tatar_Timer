@@ -28,11 +28,22 @@
             android:textSize="@dimen/bigText" />
 
         <Button
-            android:id="@+id/btn_startAndStop"
+            android:id="@+id/btn_Start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/test"
+            android:onClick="onClickStart"
+            android:text="@string/start"
             android:textSize="@dimen/standartText" />
+
+        <Button
+            android:id="@+id/btn_Stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickStop"
+            android:text="@string/stop"
+            android:textSize="@dimen/standartText" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

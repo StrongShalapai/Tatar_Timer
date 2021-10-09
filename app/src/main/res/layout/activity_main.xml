@@ -9,31 +9,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-android:gravity="center_horizontal"
         tools:ignore="MissingConstraints">
 
 
-<TextView
-    android:layout_margin="@dimen/standardMargin"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Pomidorki"
-    android:textSize="@dimen/bigText"
-    android:gravity="center"
-    tools:ignore="MissingConstraints">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standardMargin"
+            android:gravity="center"
+            android:text="Pomidorki"
+            android:textSize="@dimen/bigText"
+            tools:ignore="MissingConstraints">
 
-</TextView>
+        </TextView>
 
-    <Button
-        android:gravity="center"
-        android:layout_margin="@dimen/standardMargin"
-        android:id="@+id/btn_stopwatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Секундомер"
-        android:textSize="@dimen/standartText"
-        tools:ignore="MissingConstraints" />
+        <Button
+            android:id="@+id/btn_stopwatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standardMargin"
+            android:gravity="center"
+            android:onClick="onClickGoToStopwatch"
+            android:text="Секундомер"
+            android:textSize="@dimen/standartText"
+            tools:ignore="MissingConstraints" />
     </LinearLayout>
 
 

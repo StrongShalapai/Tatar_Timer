@@ -1,19 +1,106 @@
 package com.example.tatar_timer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class stopwatch extends AppCompatActivity {
+import java.util.Locale;
+
+public class stopwatch extends Activity {
     private Button btn_goToStopwatch;
-
-
+    private int seconds = 0;
+    private boolean running, wasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
+
+
+        if (savedInstanceState != null) {
+
+            seconds = savedInstanceState.getInt("seconds");
+            running = savedInstanceState.getBoolean("running");
+            wasRunning = savedInstanceState.getBoolean("wasRunning");
+        }
+        runTimer();
+
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        savedInstanceState.putInt("seconds", seconds);
+        savedInstanceState.putBoolean("running", running);
+        savedInstanceState.putBoolean("wasRunning", wasRunning);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wasRunning = running;
+        running = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasRunning) {
+            running = true;
+        }
+    }
+
+
+    public void onClickStart(View view) {
+        running = true;
+    }
+
+    public void onClickStop(View view) {
+        running = false;
+    }
+
+    private void runTimer() {
+        final TextView timeView = (TextView) findViewById(R.id.tv_stopwatch);
+
+        final Handler handler = new Handler();
+        // Call the post() method,
+        // passing in a new Runnable.
+        // The post() method processes
+        // code without a delay,
+        // so the code in the Runnable
+        // will run almost immediately.
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int hours = seconds / 3600;
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+                String time
+                        = String
+                        .format(Locale.getDefault(),
+                                "%d:%02d:%02d", hours,
+                                minutes, secs);
+
+                // Set the text view text.
+                timeView.setText(time);
+
+                // If running is true, increment the
+                // seconds variable.
+                if (running) {
+                    seconds++;
+                }
+                handler.postDelayed(this, 1000);
+            }
+        });
+
+    }
+
 }
