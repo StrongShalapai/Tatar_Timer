@@ -15,12 +15,14 @@ import java.util.Locale;
 
 public class stopwatch extends Activity {
     private Button btn_goToStopwatch;
+    private TextView tv_currentCategory;
     private int seconds = 0;
     private boolean running, wasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
+        tv_currentCategory = findViewById(R.id.tvCurrentCategory);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
 
@@ -100,7 +102,10 @@ public class stopwatch extends Activity {
                 handler.postDelayed(this, 1000);
             }
         });
-
     }
+
+    //
+
+
 
 }
