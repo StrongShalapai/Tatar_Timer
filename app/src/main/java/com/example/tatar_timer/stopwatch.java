@@ -92,8 +92,8 @@ public class stopwatch extends Activity {
                                 minutes, secs);
 
                 // Set the text view text.
-                timeView.setText(time);
 
+                timeView.setText(time);
                 // If running is true, increment the
                 // seconds variable.
                 if (running) {
@@ -105,7 +105,6 @@ public class stopwatch extends Activity {
     }
 
     //
-
 
 
 }
