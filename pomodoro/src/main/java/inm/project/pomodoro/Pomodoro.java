@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Pomodoro extends AppCompatActivity {
 
@@ -17,6 +18,9 @@ public class Pomodoro extends AppCompatActivity {
     int minutes, seconds, time_full, secs, check = 0;
     boolean click = false, reset = false, work = true;
     int phase2 = 0;
+
+    First_DB fdb;
+    Second_DB sdb;
 
     Handler mainHandler = new Handler();
 
@@ -273,4 +277,29 @@ public class Pomodoro extends AppCompatActivity {
             }
         });
     }
+
+    public void sendData_SDB(int number, String activity, int time,
+                             int hours, int minutes){
+        boolean info = sdb.putData(number,activity,time,hours,minutes);
+        if (info) {
+            toastMessage("Data Successfully Inserted!");
+        } else {
+            toastMessage("Something went wrong");
+        }
+    }
+
+    public void sendData_FDB(int day, int month, int year, int study,
+                             int total, int number, int visibility){
+        boolean info = fdb.putData(day,month,year,study,total,number,visibility);
+        if (info) {
+            toastMessage("Data Successfully Inserted!");
+        } else {
+            toastMessage("Something went wrong");
+        }
+    }
+
+    public void toastMessage(String message){
+        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+    }
+
 }
