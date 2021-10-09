@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.tatar_timer.sampledata.CategoryBdHelper;
 
 import java.util.Locale;
 
@@ -18,6 +22,8 @@ public class stopwatch extends Activity {
     private TextView tv_currentCategory;
     private int seconds = 0;
     private boolean running, wasRunning;
+//CategoryBdHelper
+    CategoryBdHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,10 @@ public class stopwatch extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
 
+
+    dbHelper = new CategoryBdHelper(this);
+        SQLiteDatabase database =dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
         if (savedInstanceState != null) {
 

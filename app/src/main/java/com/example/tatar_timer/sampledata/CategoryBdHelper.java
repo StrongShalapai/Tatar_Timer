@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class CategoryBdHelper extends SQLiteOpenHelper {
 
-    public void deleteDb(SQLiteDatabase db){
+    public void deleteDb(SQLiteDatabase db) {
         db.execSQL(CategoryBdConstants.SQL_DELETE_TABLE);//Удаляем прошлую ДБ
         onCreate(db);
- }
+    }
 
     public CategoryBdHelper(Context context) {
         super(context, CategoryBdConstants.DB_NAME, null, CategoryBdConstants.DB_VERSION);
