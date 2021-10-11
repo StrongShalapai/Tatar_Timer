@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class First_DB extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "First_DB";
@@ -16,6 +17,7 @@ public class First_DB extends SQLiteOpenHelper {
     private static final String COL5 = "total";
     private static final String COL6 = "number";
     private static final String COL7 = "visibility";
+    private static final String TAG = "First_DB";
 
     public First_DB(Context context) {
         super(context,TABLE_NAME, null, 1);
@@ -37,8 +39,11 @@ public class First_DB extends SQLiteOpenHelper {
 
     public boolean putData(int day, int month, int year, int study,
                            int total, int number, int visibility){
+        Log.d(TAG, "putData started");
         SQLiteDatabase db = this.getWritableDatabase();
+        Log.d(TAG, "writable DB");
         ContentValues contentValues = new ContentValues();
+        Log.d(TAG, "CV created");
         contentValues.put(COL1, day);
         contentValues.put(COL2, month);
         contentValues.put(COL3, year);
@@ -46,6 +51,7 @@ public class First_DB extends SQLiteOpenHelper {
         contentValues.put(COL5, total);
         contentValues.put(COL6, number);
         contentValues.put(COL7, visibility);
+        Log.d(TAG, "contentValues ended");
 
         //Log.d(TAG, "addData: Adding " + name + " and " + surname + " to " + TABLE_NAME);
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -73,10 +79,10 @@ public class First_DB extends SQLiteOpenHelper {
         return count;
     }
 
-    public void updateName(int id){
+    public void updateName(int a, int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE_NAME + " SET " + COL2 +
-                " = '" + 0 + "' WHERE " + COL1 + " = '" + id + "'";
+        String query = "UPDATE " + TABLE_NAME + " SET " + COL4 +
+                " = '" + a + "' WHERE " + COL1 + " = '" + id + "'";
         //Log.d(TAG, "updateName: query: " + query);
         //Log.d(TAG, "updateName: Setting name to " + newName);
         db.execSQL(query);

@@ -96,6 +96,13 @@
                 android:text="Запуск"
                 android:textSize="25sp" />
 
+            <Button
+                android:id="@+id/btn_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+
         </LinearLayout>
     </LinearLayout>
 
