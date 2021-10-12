@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class Pomodoro extends AppCompatActivity {
     TextView tv_timer;
     Button btn_study, btn_relax, btn_long, btn_launch, btn_test;
     int minutes, seconds, time_full, secs, check = 0, time = 0;
-    boolean click = false, reset = false, work = true;
+    boolean click = false, reset = false, work = true, background = true;
     int phase2 = 0, number_for_DB;
     int[] array;
     String TAG = "tomato";
@@ -98,9 +99,11 @@ public class Pomodoro extends AppCompatActivity {
                     }
                     break;
                 case R.id.btn_test:
-                    test();
+                    //test();
                     //Log.d("First_DB", "clicked");
                     //sendDataFDB(1,1,1,1,1,1,1);
+                    Intent intent = new Intent(Pomodoro.this, Second.class);
+                    startActivity(intent);
                     break;
             }
         }
@@ -130,6 +133,7 @@ public class Pomodoro extends AppCompatActivity {
         setText();
         time_full = minutes * 60 + seconds;
         secs = time_full * 10;
+        applySettings();
     }
 
     public void startThreadNew() {
@@ -322,6 +326,7 @@ public class Pomodoro extends AppCompatActivity {
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }
 
+    //cамый важный фрагмент кода здесь
     public void check(Cursor data, int day, int month, int year, int seconds){
         //sendDataFDB(day, month, year, seconds, 1, 1, 1);
         if(data.moveToFirst()) {
@@ -388,7 +393,26 @@ public class Pomodoro extends AppCompatActivity {
         else{
             toSP(25, 0, number_for_DB);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         stopThread();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!background) {
+            array = getFromSP();
+            minutes = array[0];
+            seconds = array[1];
+            number_for_DB = array[2];
+            setText();
+            time_full = minutes * 60 + seconds;
+            secs = time_full * 10;
+        }
     }
 
     public void setText(){
@@ -398,5 +422,10 @@ public class Pomodoro extends AppCompatActivity {
         else{
             tv_timer.setText(minutes + ":" + seconds);
         }
+    }
+
+    public void applySettings(){
+        SharedPreferences sp = getSharedPreferences("settings", MODE_PRIVATE);
+        background = sp.getBoolean("background", true);
     }
 }
