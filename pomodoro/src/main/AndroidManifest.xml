@@ -9,7 +9,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tatar_Timer">
-        <activity android:name=".Pomodoro">
+        <activity
+            android:name=".Goals"
+            android:label="Цели"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Settings"
+            android:label="Настройки"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Pomodoro"
+            android:label="Pomodoro"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Second"
+            android:label="Тестовая часть"
+            android:parentActivityName=".Pomodoro"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:label="Фокусируйся!">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
