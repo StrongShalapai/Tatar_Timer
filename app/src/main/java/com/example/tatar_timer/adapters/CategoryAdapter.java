@@ -1,5 +1,7 @@
 package com.example.tatar_timer.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,14 +20,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         ViewHolderCount = 0;
     }
 
+    @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        Context context = parent.getContext();
+        int layoutIdForListItem = R.layout.category_number;
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
+        CategoryViewHolder viewHolder = new CategoryViewHolder(view);
+
+        viewHolder.itemName.setText("view holder index" + ViewHolderCount);
+        ViewHolderCount++;
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(CategoryAdapter.CategoryViewHolder holder, int position) {
-
+        holder.bind(position);
     }
 
     @Override
@@ -33,7 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return numberItems;
     }
 
-    //////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         TextView itemName;

@@ -25,6 +25,16 @@ public class stopwatch extends Activity {
 //CategoryBdHelper
     CategoryBdHelper dbHelper;
 
+    private String currentCategoryName;
+
+    public String getCurrentCategoryName() {
+        return currentCategoryName;
+    }
+//геттер и сеттер для текущей категории. будем ставить его через preferences
+    public void setCurrentCategoryName(String currentCategoryName) {
+        this.currentCategoryName = currentCategoryName;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
@@ -112,6 +122,11 @@ public class stopwatch extends Activity {
                 handler.postDelayed(this, 1000);
             }
         });
+    }
+
+    public void onClickGoToCategoryList(View view) {
+        Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
+        startActivity(goToList);
     }
 
     //

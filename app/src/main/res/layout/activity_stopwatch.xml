@@ -23,7 +23,7 @@
             android:layout_margin="@dimen/standardMargin"
             android:layout_marginTop="50dp"
             android:gravity="center_horizontal"
-            android:padding="@dimen/standartPadding"
+            android:padding="10dp"
             android:text="@string/test"
             android:textSize="@dimen/bigText" />
 
@@ -65,9 +65,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/standardMargin"
                 android:layout_weight="0"
-                android:text="@string/test"
-                android:layout_margin="@dimen/standardMargin"/>
+                android:onClick="onClickGoToCategoryList"
+                android:text="@string/test" />
 
         </LinearLayout>
 
