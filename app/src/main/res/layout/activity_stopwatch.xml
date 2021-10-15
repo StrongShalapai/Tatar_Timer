@@ -60,12 +60,11 @@
                 android:textSize="@dimen/standartText" />
 
             <Button
-                android:id="@+id/btn_chooseCategory"
+                android:id="@+id/btn_chooseCategory1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/standardMargin"
-                android:onClick="onClickGoToCategoryList"
                 android:text="@string/chooseCat" />
 
         </LinearLayout>

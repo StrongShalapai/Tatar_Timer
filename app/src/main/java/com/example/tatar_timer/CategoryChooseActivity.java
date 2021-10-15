@@ -27,15 +27,21 @@ public class CategoryChooseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
+
+        Bundle receivedCategories = getIntent().getExtras();
+        String[] categories = receivedCategories.getStringArray("categoryArray");
+
         categoryList = findViewById(R.id.rc_names);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        categoryAdapter = new CategoryAdapter(100);
+
+        //создаем столько вью сколько есть всего категорий
+        categoryAdapter = new CategoryAdapter(categories.length, categories);
+
         categoryList.setLayoutManager(layoutManager);
         categoryList.setHasFixedSize(true);
         categoryList.setAdapter(categoryAdapter);
 
 
-        ArrayList<String> categories = new ArrayList<String>();
 
 
     }

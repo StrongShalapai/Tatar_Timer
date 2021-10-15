@@ -14,10 +14,12 @@ import com.example.tatar_timer.R;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private int numberItems;
     private static int ViewHolderCount;
+    private String[] categories;
 
-    public CategoryAdapter(int numberItems) {
+    public CategoryAdapter(int numberItems, String[] array) {
         this.numberItems = numberItems;
         ViewHolderCount = 0;
+        categories = array;
     }
 
     @NonNull
@@ -59,6 +61,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         void bind(int listIndex) {
 //            itemName.setText(S);
+            itemName.setText(categories[listIndex]);
 
         }
     }

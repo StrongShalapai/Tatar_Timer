@@ -7,48 +7,50 @@
     android:padding="@dimen/standardPadding"
     tools:context=".CategoryChooseActivity">
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
-    <EditText
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/enterNewOne"
-        android:inputType="text"
-        android:textSize="@dimen/standartText"
-        android:layout_margin="@dimen/standardMargin"
+        android:orientation="vertical">
 
-        />
+        <EditText
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standardMargin"
+            android:focusableInTouchMode="true"
+            android:hint="@string/enterNewOne"
+            android:importantForAutofill="no"
+            android:inputType="text"
 
-    <Button
-        android:text="@string/apply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/standardMargin"
-        />
+            android:singleLine="true"
+            android:textSize="@dimen/standartText" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standardMargin"
+            android:text="@string/apply" />
 
 
+        <TextView
+            android:id="@+id/tvForList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/standardPadding"
+            android:text="@string/test"
+            android:textSize="@dimen/bigText"
+            android:visibility="gone"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="10dp" />
 
-    <TextView
-        android:id="@+id/tvForList"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/standardPadding"
-        android:text="@string/test"
-        android:textSize="@dimen/bigText"
-        android:visibility="gone"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="10dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_names"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/standardMargin">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_names"
-        android:layout_width="match_parent"
-        android:layout_margin="@dimen/standardMargin"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
-</LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 </FrameLayout>

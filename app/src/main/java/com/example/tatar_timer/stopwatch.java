@@ -16,15 +16,19 @@ import android.widget.Toast;
 
 import com.example.tatar_timer.sampledata.CategoryBdHelper;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class stopwatch extends Activity {
     private Button btn_goToStopwatch;
     private TextView tv_currentCategory;
     private Button btn_goToCategoryList;
+    private Button chooseCategory;
     private int seconds = 0;
+    private static final String TAG = "myLogs";
+
     private boolean running, wasRunning;
-//CategoryBdHelper
+    //CategoryBdHelper
     CategoryBdHelper dbHelper;
 
     private String currentCategoryName;
@@ -32,7 +36,8 @@ public class stopwatch extends Activity {
     public String getCurrentCategoryName() {
         return currentCategoryName;
     }
-//геттер и сеттер для текущей категории. будем ставить его через preferences
+
+    //геттер и сеттер для текущей категории. будем ставить его через preferences
     public void setCurrentCategoryName(String currentCategoryName) {
         this.currentCategoryName = currentCategoryName;
     }
@@ -46,14 +51,13 @@ public class stopwatch extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
-        tv_currentCategory = findViewById(R.id.tvCurrentCategory);
-        btn_goToCategoryList = findViewById(R.id.btn_chooseCategory);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
-
-    dbHelper = new CategoryBdHelper(this);
-        SQLiteDatabase database =dbHelper.getWritableDatabase();
+        btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
+        tv_currentCategory = findViewById(R.id.tvCurrentCategory);
+        chooseCategory = findViewById(R.id.btn_chooseCategory1);
+        dbHelper = new CategoryBdHelper(this);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         if (savedInstanceState != null) {
@@ -63,7 +67,22 @@ public class stopwatch extends Activity {
             wasRunning = savedInstanceState.getBoolean("wasRunning");
         }
         runTimer();
+        ArrayList<String> categories = new ArrayList<String>();
+        categories.add("Прогулка");
+        categories.add("Учеба");
+        categories.add("Спорт");
+        String[] sentCategories = categories.toArray(new String[0]); //Превращаем бесконечный массив в статичный
 
+
+        View.OnClickListener goToListYES = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
+                goToList.putExtra("categoryArray", sentCategories); //отправляем его в ресайклер
+                startActivity(goToList);
+            }
+        };
+        chooseCategory.setOnClickListener(goToListYES);
     }
 
     @Override
@@ -90,10 +109,9 @@ public class stopwatch extends Activity {
 
 
     public void onClickStart(View view) {
-        if(running){
+        if (running) {
             toaster("Секундомер уже запущен!");
-        }
-        else {
+        } else {
             running = true;
             toaster("Секундомер запущен");
         }
@@ -139,13 +157,5 @@ public class stopwatch extends Activity {
             }
         });
     }
-
-    public void onClickGoToCategoryList(View view) {
-        Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
-        startActivity(goToList);
-    }
-
-    //
-
 
 }
