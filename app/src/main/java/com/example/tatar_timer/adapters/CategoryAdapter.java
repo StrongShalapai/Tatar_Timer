@@ -28,6 +28,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private ArrayList<String> categoryList;
     private static final String TAG = "myLogs";
     private static final String DIVIDER = "|||||||||||||||||||||||";
+    int positionIndex;
+
 
     private Boolean flag = true;
     Context mContext;
@@ -54,7 +56,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         View view = mInflater.inflate(R.layout.category_number, parent, false);
         CategoryViewHolder viewHolder = new CategoryViewHolder(view);
 
-//        viewHolder.itemName.setText("view holder index" + ViewHolderCount);
         ViewHolderCount++;
         return viewHolder;
     }
@@ -64,13 +65,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         mPosition = position;
         Log.d(DIVIDER, "Divide i say");
         Log.d(TAG, "Current position is equal" +  String.valueOf(mPosition));
-
         holder.bind(mPosition);
     }
 
     @Override
     public int getItemCount() {
-        return categories.length;
+        return categoryList.size();
 //        return numberItems;
     }
 
@@ -102,26 +102,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     Log.d(DIVIDER, "");
                     Log.d(TAG, "Зажалось");
 
-                    int positionIndex = getAdapterPosition() ;
+                    positionIndex = getAdapterPosition() ;
                     Log.d(TAG, "Размер массива " + String.valueOf(categoryList.size()));
                     Log.d(TAG, "Выбранный элемент " + String.valueOf(positionIndex));
 
 
                     for (int i = 0; i < categoryList.size(); i ++){
-                        Log.d(TAG, "Выбранный элемент " + categoryList.toArray()[i]);
+                        Log.d(TAG, "Выбранный элемент: \n" + categoryList.toArray()[i]);
                     }
                     categoryList.remove(positionIndex);
                     notifyItemRemoved(positionIndex);
                     notifyItemRangeChanged(positionIndex, categoryList.size());
 
                     for (int i = 0; i < categoryList.size(); i ++){
-                        Log.d(TAG, "Выбранный элемент " + categoryList.toArray()[i]);
+                        Log.d(TAG, "Остался элемент:  \n" + categoryList.toArray()[i]);
                     }
                     flag = false;
                     return true;
                 }
             });
-
         }
 
         void bind(int listIndex) {
