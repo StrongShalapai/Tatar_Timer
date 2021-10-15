@@ -5,17 +5,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.example.tatar_timer.adapters.CategoryAdapter;
 
+import java.util.ArrayList;
+
 public class CategoryChooseActivity extends AppCompatActivity {
 
     private RecyclerView categoryList;
     private CategoryAdapter categoryAdapter;
-
-
+    final String SAVED_CATEGORY = "saved_category";
+    SharedPreferences preferences;
 
 
     @SuppressLint("WrongViewCast")
@@ -28,14 +31,15 @@ public class CategoryChooseActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         categoryAdapter = new CategoryAdapter(100);
         categoryList.setLayoutManager(layoutManager);
-        categoryList.setHasFixedSize(false);
+        categoryList.setHasFixedSize(true);
         categoryList.setAdapter(categoryAdapter);
 
 
-
-
-
+        ArrayList<String> categories = new ArrayList<String>();
 
 
     }
+
+
+
 }

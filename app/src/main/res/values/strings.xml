@@ -3,4 +3,7 @@
     <string name="test">TEST</string>
     <string name="stop">Стоп</string>
     <string name="start">Старт</string>
+    <string name="enterNewOne">Введите новую категорию</string>
+    <string name="apply">Принять</string>
+    <string name="chooseCat">Выбрать категорию</string>
 </resources>

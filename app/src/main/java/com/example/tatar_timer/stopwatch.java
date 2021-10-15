@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tatar_timer.sampledata.CategoryBdHelper;
 
@@ -20,6 +21,7 @@ import java.util.Locale;
 public class stopwatch extends Activity {
     private Button btn_goToStopwatch;
     private TextView tv_currentCategory;
+    private Button btn_goToCategoryList;
     private int seconds = 0;
     private boolean running, wasRunning;
 //CategoryBdHelper
@@ -35,13 +37,20 @@ public class stopwatch extends Activity {
         this.currentCategoryName = currentCategoryName;
     }
 
+    private void toaster(String text) {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                text, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
         tv_currentCategory = findViewById(R.id.tvCurrentCategory);
+        btn_goToCategoryList = findViewById(R.id.btn_chooseCategory);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
-
 
     dbHelper = new CategoryBdHelper(this);
         SQLiteDatabase database =dbHelper.getWritableDatabase();
@@ -81,11 +90,18 @@ public class stopwatch extends Activity {
 
 
     public void onClickStart(View view) {
-        running = true;
+        if(running){
+            toaster("Секундомер уже запущен!");
+        }
+        else {
+            running = true;
+            toaster("Секундомер запущен");
+        }
     }
 
     public void onClickStop(View view) {
         running = false;
+        toaster("Секундомер остановлен");
     }
 
     private void runTimer() {

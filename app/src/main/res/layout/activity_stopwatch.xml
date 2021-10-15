@@ -44,10 +44,9 @@
             android:textSize="@dimen/standartText" />
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="bottom"
             android:orientation="vertical">
@@ -66,9 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/standardMargin"
-                android:layout_weight="0"
                 android:onClick="onClickGoToCategoryList"
-                android:text="@string/test" />
+                android:text="@string/chooseCat" />
 
         </LinearLayout>
 

@@ -7,6 +7,28 @@
     android:padding="@dimen/standardPadding"
     tools:context=".CategoryChooseActivity">
 
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/enterNewOne"
+        android:inputType="text"
+        android:textSize="@dimen/standartText"
+        android:layout_margin="@dimen/standardMargin"
+
+        />
+
+    <Button
+        android:text="@string/apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/standardMargin"
+        />
+
+
 
     <TextView
         android:id="@+id/tvForList"
@@ -23,9 +45,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_names"
         android:layout_width="match_parent"
+        android:layout_margin="@dimen/standardMargin"
         android:layout_height="match_parent">
 
     </androidx.recyclerview.widget.RecyclerView>
-
+</LinearLayout>
 
 </FrameLayout>
