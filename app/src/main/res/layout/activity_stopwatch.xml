@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/standardMargin"
             android:layout_marginTop="50dp"
+            android:visibility="gone"
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:text="@string/test"
@@ -48,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pauseChronometer"
-            android:visibility="gone"
             android:text="@string/stop"
             android:textSize="@dimen/standartText" />
 

@@ -32,9 +32,11 @@ public class stopwatch extends Activity {
     private long pauseOffSet;
 
     private String currentCategoryName;
+
     public String getCurrentCategoryName() {
         return currentCategoryName;
     }
+
     //геттер и сеттер для текущей категории. будем ставить его через preferences
     public void setCurrentCategoryName(String currentCategoryName) {
         this.currentCategoryName = currentCategoryName;
@@ -112,9 +114,10 @@ public class stopwatch extends Activity {
             chronometer.stop();
             pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
-
+//            showCurrentTime();
+        showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
-        toaster("Пауза");
+
     }
 
     public void resetChronometer(View v) {
@@ -122,6 +125,21 @@ public class stopwatch extends Activity {
         pauseOffSet = 0;
     }
 
+    private void showCurrentTime() {
+        long elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+        toaster(String.valueOf(elapsedTime));
+    }
+
+    private void showInfo(long totalMilliseconds)  {
+        // Seconds
+        long totalSecs = totalMilliseconds / 1000;
+        // Show Info
+        long hours = totalSecs / 3600;
+        long minutes = (totalSecs % 3600) / 60;
+        long seconds = totalSecs % 60;
+
+        toaster("Base Time: " + totalSecs +" ~ " + hours + " hours " + minutes+" minutes " + seconds + " seconds");
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
