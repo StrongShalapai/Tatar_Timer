@@ -31,6 +31,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     int positionIndex;
 
 
+    //Осталось возврат добавить и усе
     private Boolean flag = true;
     Context mContext;
     SharedPreferences sPref;

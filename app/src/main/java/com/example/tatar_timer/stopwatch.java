@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,23 +22,19 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class stopwatch extends Activity {
-    private Button btn_goToStopwatch;
+    private Button btn_goToStopwatch, startChrono, pauseChrono, chooseCategory, btn_goToCategoryList;
     private TextView tv_currentCategory;
-    private Button btn_goToCategoryList;
-    private Button chooseCategory;
     private int seconds = 0;
     private static final String TAG = "myLogs";
-
+    private Chronometer chronometer;
     private boolean running, wasRunning;
-    //CategoryBdHelper
     CategoryBdHelper dbHelper;
+    private long pauseOffSet;
 
     private String currentCategoryName;
-
     public String getCurrentCategoryName() {
         return currentCategoryName;
     }
-
     //геттер и сеттер для текущей категории. будем ставить его через preferences
     public void setCurrentCategoryName(String currentCategoryName) {
         this.currentCategoryName = currentCategoryName;
@@ -49,24 +47,32 @@ public class stopwatch extends Activity {
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stopwatch);
+    private void init() {
         btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
         tv_currentCategory = findViewById(R.id.tvCurrentCategory);
         chooseCategory = findViewById(R.id.btn_chooseCategory1);
         dbHelper = new CategoryBdHelper(this);
+        chronometer = findViewById(R.id.chronometer);
+        startChrono = findViewById(R.id.btn_StartChrono);
+        pauseChrono = findViewById(R.id.btn_StopChrono);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_stopwatch);
+
+        init();
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        if (savedInstanceState != null) {
-
-            seconds = savedInstanceState.getInt("seconds");
-            running = savedInstanceState.getBoolean("running");
-            wasRunning = savedInstanceState.getBoolean("wasRunning");
-        }
-        runTimer();
+//        if (savedInstanceState != null) {
+//
+//            seconds = savedInstanceState.getInt("seconds");
+//            running = savedInstanceState.getBoolean("running");
+//            wasRunning = savedInstanceState.getBoolean("wasRunning");
+//        }
+//        runTimer();
         ArrayList<String> categories = new ArrayList<String>();
         categories.add("Прогулка");
         categories.add("Учеба");
@@ -83,79 +89,47 @@ public class stopwatch extends Activity {
             }
         };
         chooseCategory.setOnClickListener(goToListYES);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        savedInstanceState.putInt("seconds", seconds);
-        savedInstanceState.putBoolean("running", running);
-        savedInstanceState.putBoolean("wasRunning", wasRunning);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        wasRunning = running;
-        running = false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (wasRunning) {
-            running = true;
-        }
-    }
 
 
-    public void onClickStart(View view) {
-        if (running) {
-            toaster("Секундомер уже запущен!");
-        } else {
-            running = true;
-            toaster("Секундомер запущен");
-        }
-    }
-
-    public void onClickStop(View view) {
-        running = false;
-        toaster("Секундомер остановлен");
-    }
-
-    private void runTimer() {
-        final TextView timeView = (TextView) findViewById(R.id.tv_stopwatch);
-
-        final Handler handler = new Handler();
-        // Call the post() method,
-        // passing in a new Runnable.
-        // The post() method processes
-        // code without a delay,
-        // so the code in the Runnable
-        // will run almost immediately.
-
-        handler.post(new Runnable() {
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
-            public void run() {
-                int hours = seconds / 3600;
-                int minutes = (seconds % 3600) / 60;
-                int secs = seconds % 60;
-                String time
-                        = String
-                        .format(Locale.getDefault(),
-                                "%d:%02d:%02d", hours,
-                                minutes, secs);
-
-                // Set the text view text.
-
-                timeView.setText(time);
-                // If running is true, increment the
-                // seconds variable.
-                if (running) {
-                    seconds++;
-                }
-                handler.postDelayed(this, 1000);
+            public void onChronometerTick(Chronometer chronometer) {
+                //ПРи каждом тики можем выполнять действия
             }
         });
     }
 
+    public void startChronometer(View v) {
+        if (!running) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffSet);
+            chronometer.start();
+            running = true;
+        }
+    }
+
+    public void pauseChronometer(View v) {
+        if (running) {
+            chronometer.stop();
+            pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+
+        }
+        toaster("Пауза");
+    }
+
+    public void resetChronometer(View v) {
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffSet = 0;
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+//        savedInstanceState.putInt("seconds", seconds);
+//        savedInstanceState.putBoolean("running", running);
+//        savedInstanceState.putBoolean("wasRunning", wasRunning);
+    }
+
+
 }
+
