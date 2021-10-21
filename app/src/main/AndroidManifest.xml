@@ -10,11 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tatar_Timer">
         <activity android:name=".CategoryChooseActivity"></activity>
-        <activity android:name=".stopwatch" />
+        <activity android:name=".stopwatch">
+
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <!--                android:noHistory = "true"-->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

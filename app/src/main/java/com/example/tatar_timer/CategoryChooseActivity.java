@@ -73,8 +73,6 @@ public class CategoryChooseActivity extends Activity {
         categoryList.setAdapter(categoryAdapter);
 
 
-//        ArrayList<String> updatedList = new ArrayList<String>(categories.);
-
         View.OnClickListener commitAndUpdate = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,5 +88,20 @@ public class CategoryChooseActivity extends Activity {
 
     }
 
+    public static void closeChooser() {
+        Log.d(TAG, "closeChooser: Closed");
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.tatar_timer.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.util.Log;
@@ -13,7 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tatar_timer.CategoryChooseActivity;
 import com.example.tatar_timer.R;
+import com.example.tatar_timer.stopwatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +68,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(CategoryAdapter.CategoryViewHolder holder, int position) {
         mPosition = position;
         Log.d(DIVIDER, "Divide i say");
-        Log.d(TAG, "Current position is equal" +  String.valueOf(mPosition));
+        Log.d(TAG, "Current position is equal" + String.valueOf(mPosition));
         holder.bind(mPosition);
     }
 
@@ -90,9 +93,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 public void onClick(View v) {
                     int positionIndex = getAdapterPosition() + 1;
                     Toast toast;
+                    Intent intent = new Intent(v.getContext(), stopwatch.class);
 
-                    toast = Toast.makeText(mContext, "Айди этого элемента равно " + positionIndex, Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(mContext, "Выбрана категория " + categoryList.get(getAdapterPosition()), Toast.LENGTH_SHORT);
                     toast.show();
+                    Log.d(TAG, categoryList.get(getAdapterPosition()));
+                    intent.putExtra("ChosenActivity", categoryList.get(getAdapterPosition()));
+                    v.getContext().startActivity(intent);
+                    CategoryChooseActivity.closeChooser();
+//                    stopwatch.setCurrentCategoryName(String.valueOf(categoryList.get(positionIndex)));
+
+
                 }
             });
 
@@ -103,19 +114,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     Log.d(DIVIDER, "");
                     Log.d(TAG, "Зажалось");
 
-                    positionIndex = getAdapterPosition() ;
+                    positionIndex = getAdapterPosition();
                     Log.d(TAG, "Размер массива " + String.valueOf(categoryList.size()));
                     Log.d(TAG, "Выбранный элемент " + String.valueOf(positionIndex));
 
 
-                    for (int i = 0; i < categoryList.size(); i ++){
+                    for (int i = 0; i < categoryList.size(); i++) {
                         Log.d(TAG, "Выбранный элемент: \n" + categoryList.toArray()[i]);
                     }
                     categoryList.remove(positionIndex);
                     notifyItemRemoved(positionIndex);
                     notifyItemRangeChanged(positionIndex, categoryList.size());
 
-                    for (int i = 0; i < categoryList.size(); i ++){
+                    for (int i = 0; i < categoryList.size(); i++) {
                         Log.d(TAG, "Остался элемент:  \n" + categoryList.toArray()[i]);
                     }
                     flag = false;

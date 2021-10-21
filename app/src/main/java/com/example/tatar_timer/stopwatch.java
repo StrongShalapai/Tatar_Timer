@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -22,24 +24,22 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class stopwatch extends Activity {
-    private Button btn_goToStopwatch, startChrono, pauseChrono, chooseCategory, btn_goToCategoryList;
+    private static String currentCategoryName = "Категория не выбрана!"; //Это тоже должно.
+    private Button chooseCategory;
     private TextView tv_currentCategory;
-    private int seconds = 0;
+    private long totalSeconds = 0; //Это пойдет в БД
     private static final String TAG = "myLogs";
     private Chronometer chronometer;
-    private boolean running, wasRunning;
-    CategoryBdHelper dbHelper;
+    private boolean running;
     private long pauseOffSet;
+    SharedPreferences sharedPreferences;
+    CategoryBdHelper dbHelper;
 
-    private String currentCategoryName;
-
-    public String getCurrentCategoryName() {
-        return currentCategoryName;
-    }
 
     //геттер и сеттер для текущей категории. будем ставить его через preferences
-    public void setCurrentCategoryName(String currentCategoryName) {
-        this.currentCategoryName = currentCategoryName;
+    public static void setCurrentCategoryName(String currentCategoryName_) {
+        currentCategoryName = currentCategoryName_;
+
     }
 
     private void toaster(String text) {
@@ -50,31 +50,36 @@ public class stopwatch extends Activity {
 
 
     private void init() {
-        btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
+        Button btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
         tv_currentCategory = findViewById(R.id.tvCurrentCategory);
         chooseCategory = findViewById(R.id.btn_chooseCategory1);
         dbHelper = new CategoryBdHelper(this);
         chronometer = findViewById(R.id.chronometer);
-        startChrono = findViewById(R.id.btn_StartChrono);
-        pauseChrono = findViewById(R.id.btn_StopChrono);
+        Button startChrono = findViewById(R.id.btn_StartChrono);
+        Button pauseChrono = findViewById(R.id.btn_StopChrono);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
-
+        Log.d(TAG, "onCreate: Started StopWatch activity");
         init();
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-//        if (savedInstanceState != null) {
-//
-//            seconds = savedInstanceState.getInt("seconds");
-//            running = savedInstanceState.getBoolean("running");
-//            wasRunning = savedInstanceState.getBoolean("wasRunning");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            currentCategoryName = bundle.getString("ChosenActivity");
+        }
+
+//        if (!currentCategoryName.equals("Empty")) {
+//            sharedPreferences.edit().putString("currentCategory", currentCategoryName).apply();
+//            Log.d(TAG, "текущая хуита" + currentCategoryName);
 //        }
-//        runTimer();
+        tv_currentCategory.setText(currentCategoryName);
+
+
         ArrayList<String> categories = new ArrayList<String>();
         categories.add("Прогулка");
         categories.add("Учеба");
@@ -102,10 +107,15 @@ public class stopwatch extends Activity {
     }
 
     public void startChronometer(View v) {
-        if (!running) {
-            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffSet);
-            chronometer.start();
-            running = true;
+        if (!currentCategoryName.equals("Категория не выбрана!")) {
+            if (!running) {
+                chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffSet);
+                chronometer.start();
+                running = true;
+            }
+        }
+        else{
+            toaster("Выберите категорию!");
         }
     }
 
@@ -115,7 +125,7 @@ public class stopwatch extends Activity {
             pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
 //            showCurrentTime();
-        showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
+            showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
 
     }
@@ -130,7 +140,7 @@ public class stopwatch extends Activity {
         toaster(String.valueOf(elapsedTime));
     }
 
-    private void showInfo(long totalMilliseconds)  {
+    private void showInfo(long totalMilliseconds) {
         // Seconds
         long totalSecs = totalMilliseconds / 1000;
         // Show Info
@@ -138,16 +148,32 @@ public class stopwatch extends Activity {
         long minutes = (totalSecs % 3600) / 60;
         long seconds = totalSecs % 60;
 
-        toaster("Base Time: " + totalSecs +" ~ " + hours + " hours " + minutes+" minutes " + seconds + " seconds");
+        totalSeconds = totalSecs;
+        long wholeSeconds = (totalMilliseconds / 1000);
+
+        if (totalMilliseconds < wholeSeconds) {
+            totalMilliseconds = wholeSeconds;
+        }
+
+        Log.d(TAG, "MillSeconds = " + totalMilliseconds + "\n" + "Whole seconds = " + wholeSeconds);
+        toaster("Всего: " + totalSecs + " из них минут " + minutes + " и секунд " + wholeSeconds);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: Closing all!))");
+//        Intent intent = new Intent(stopwatch.this, MainActivity.class);
+//        startActivity(intent);
+//        finishAffinity();
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-//        savedInstanceState.putInt("seconds", seconds);
-//        savedInstanceState.putBoolean("running", running);
-//        savedInstanceState.putBoolean("wasRunning", wasRunning);
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Destroying!");
+        finish();
     }
-
-
 }
 
