@@ -28,14 +28,8 @@ public class CategoryChooseActivity extends Activity {
     private CategoryAdapter categoryAdapter;
     private Button button_commit;
     private EditText editText;
-    private RecyclerView recyclerView;
-    final String SAVED_CATEGORY = "saved_category";
-    SharedPreferences preferences;
     private static final String TAG = "myLogs";
     Context context;
-
-    private String newCater;
-    private List<String> data;
 
 
     private void toaster(String text) {
@@ -54,19 +48,22 @@ public class CategoryChooseActivity extends Activity {
         button_commit = findViewById(R.id.btn_commitNewCategory);
         editText = findViewById(R.id.et_newCategory);
 
-
+        toaster("Одиночный клик - выбор категории");
+        toaster("Зажатие - удаление");
         Bundle receivedCategories = getIntent().getExtras();
         String[] categories = receivedCategories.getStringArray("categoryArray");
         ArrayList<String> updatedList = new ArrayList<>(Arrays.asList(categories));
-//        data = new ArrayList<String>();
-        data = Arrays.asList(receivedCategories.getStringArray("categoryArray"));
 
+
+        for (int i = 0; i < categories.length; i++) {
+            Log.d(TAG, "item " + categories[i]);
+        }
 
         categoryList = findViewById(R.id.rc_names);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         //создаем столько вью сколько есть всего категорий
-        categoryAdapter = new CategoryAdapter(this, categories.length, updatedList); //Наш адаптер
+        categoryAdapter = new CategoryAdapter(this, categories.length, updatedList, categories); //Наш адаптер
 //
         categoryList.setLayoutManager(layoutManager);
         categoryList.setHasFixedSize(false);
@@ -76,11 +73,20 @@ public class CategoryChooseActivity extends Activity {
         View.OnClickListener commitAndUpdate = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updatedList.add(updatedList.size(), editText.getText().toString());
-                categoryAdapter.notifyItemInserted(updatedList.size());
-                Log.d(TAG, editText.getText().toString() + "\n" + updatedList.size());
-                categoryList.setAdapter(new CategoryAdapter(context, categories.length, updatedList));
-                categoryList.invalidate();
+                String.valueOf(editText.getText());
+                if (!String.valueOf(editText.getText()).equals("")) {
+//                    editText.getText();
+                    updatedList.add(updatedList.size(), editText.getText().toString());
+
+                    categoryAdapter.notifyItemInserted(updatedList.size());
+                    Log.d(TAG, editText.getText().toString() + "\n" + updatedList.size());
+                    categoryList.setAdapter(new CategoryAdapter(context, categories.length, updatedList, categories));
+                    categoryList.invalidate();
+                    editText.setText("");
+                } else {
+                    Log.d(TAG, "onClick: EditText is empty");
+                    toaster("Название категории не может быть пустым!");
+                }
             }
         };
 

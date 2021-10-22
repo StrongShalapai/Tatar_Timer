@@ -32,6 +32,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private static final String TAG = "myLogs";
     private static final String DIVIDER = "|||||||||||||||||||||||";
     int positionIndex;
+    private static final String PermissionToCatArray = "iLoveCats";
 
 
     //Осталось возврат добавить и усе
@@ -42,12 +43,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     final String SAVED_TEXT = "saved_text";
 
-    public CategoryAdapter(Context context, int numberItems, ArrayList<String> array) {
+    public CategoryAdapter(Context context, int numberItems, ArrayList<String> array, String[] newArray) {
 //        this.numberItems = numberItems;
         mContext = context;
         mInflater = LayoutInflater.from(context);
         ViewHolderCount = 0;
-        categories = array.toArray(new String[0]);
         categoryList = array;
     }
 
@@ -99,7 +99,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     toast.show();
                     Log.d(TAG, categoryList.get(getAdapterPosition()));
                     intent.putExtra("ChosenActivity", categoryList.get(getAdapterPosition()));
-                    v.getContext().startActivity(intent);
+                    String[] sentArray2 = categoryList.toArray(new String[0]);
+                    intent.putExtra("Array", sentArray2);
+                    v.getContext().startActivity(intent); //Стартуем активити.
+
                     CategoryChooseActivity.closeChooser();
 //                    stopwatch.setCurrentCategoryName(String.valueOf(categoryList.get(positionIndex)));
 
