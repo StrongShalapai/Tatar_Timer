@@ -106,7 +106,8 @@ public class stopwatch extends Activity {
 
                 startActivity(goToList);
             }
-        }; chooseCategory.setOnClickListener(goToListYES);
+        };
+        chooseCategory.setOnClickListener(goToListYES);
 
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
@@ -175,10 +176,10 @@ public class stopwatch extends Activity {
         }
 
         Log.d(TAG, "MillSeconds = " + totalMilliseconds + "\n" + "Whole seconds = " + wholeSeconds);
-        toaster("Всего: " + totalSecs + " из них минут " + minutes + " и секунд " + wholeSeconds);
+        toaster("Всего прошло секунд: " + totalSecs);
     }
 
-    private String buildStringFromArray(String[] array) {
+    public String buildStringFromArray(String[] array) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
             builder.append(array[i]);
