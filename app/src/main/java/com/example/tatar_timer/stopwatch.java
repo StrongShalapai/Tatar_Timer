@@ -193,7 +193,9 @@ public class stopwatch extends Activity {
         super.onStop();
 //        saveData();
         Log.d(TAG, "onStop: Destroying!");
-        finish();
+        if(!running){
+            finish();
+        }
     }
 
     @Override

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".stopwatch">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintHorizontal_weight="0"
-        app:layout_constraintVertical_weight="0">
+        android:gravity="center"
 
+        android:orientation="vertical">
 
         <Chronometer
-            android:layout_margin="@dimen/standardMargin"
             android:id="@+id/chronometer"
-            android:textSize="@dimen/bigText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:layout_margin="@dimen/standardMargin"
+            android:layout_marginTop="200dp"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/bigText" />
 
         <TextView
             android:id="@+id/tv_stopwatch"
@@ -30,11 +30,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/standardMargin"
             android:layout_marginTop="50dp"
-            android:visibility="gone"
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:text="@string/test"
-            android:textSize="@dimen/bigText" />
+            android:textSize="@dimen/bigText"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_StartChrono"
@@ -82,4 +82,4 @@
     </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
