@@ -1,18 +1,12 @@
 package com.example.tatar_timer;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.TaskInfo;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,16 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tatar_timer.sampledata.CategoryBdHelper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 public class stopwatch extends Activity {
     private static String currentCategoryName = "Категория не выбрана!"; //Это тоже должно.
@@ -41,15 +26,12 @@ public class stopwatch extends Activity {
     private Chronometer chronometer;
     private boolean running;
     private long pauseOffSet;
-    private String[] arrayOfCategories = {"Прогулка", "Учеба", "Спорт"}; //Стандратный массив. Отправляем если у нас нет сохраненных массивов
-    private String[] defaultArray = {"Прогулка", "Учеба", "Спорт"};
-    private String[] sentCategories; //
-    private String[] receivedArray;
+    private final String[] arrayOfCategories = {"Прогулка", "Учеба", "Спорт"}; //Стандратный массив. Отправляем если у нас нет сохраненных массивов
+    private final String[] defaultArray = {"Прогулка", "Учеба", "Спорт"};
     CategoryBdHelper dbHelper;
     SharedPreferences savedString;
     private final String DELIMITER = "%_%";
-    private String savedStringString, loadedString;
-    private Boolean isStringSaved = false;
+    private String  loadedString;
 
 
     private void toaster(String text) {
@@ -59,7 +41,6 @@ public class stopwatch extends Activity {
     }
 
     private void init() {
-        Button btn_goToStopwatch = findViewById(R.id.btn_stopwatch);
         tv_currentCategory = findViewById(R.id.tvCurrentCategory);
         chooseCategory = findViewById(R.id.btn_chooseCategory1);
         dbHelper = new CategoryBdHelper(this);
@@ -72,8 +53,6 @@ public class stopwatch extends Activity {
         setContentView(R.layout.activity_stopwatch);
         Log.d(TAG, "onCreate: Started StopWatch activity");
         init();
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
         Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
 
         String[] loadedCategories = null; //Массив, который заполнится если мы найдем сохранненные файлы
@@ -86,7 +65,7 @@ public class stopwatch extends Activity {
 
         if (bundle != null) { //Проверяем пришел ли нам модифицированный список
             currentCategoryName = bundle.getString("ChosenActivity"); //Получаем выбранную категорию
-            receivedArray = bundle.getStringArray("Array");
+            String[] receivedArray = bundle.getStringArray("Array");
 
             ScanArray(receivedArray, "Массив получен от прошлого активити");
             goToList.putExtra("categoryArray", receivedArray);
@@ -100,13 +79,7 @@ public class stopwatch extends Activity {
             goToList.putExtra("categoryArray", defaultArray);
         }
         tv_currentCategory.setText(currentCategoryName); //Назначаем выбранную категорию
-        View.OnClickListener goToListYES = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(goToList);
-            }
-        };
+        View.OnClickListener goToListYES = v -> startActivity(goToList);
         chooseCategory.setOnClickListener(goToListYES);
 
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -134,8 +107,8 @@ public class stopwatch extends Activity {
     private void ScanArray(String[] array, String name) {
         Log.d(TAG, "ScanArray: Started");
         Log.d(TAG, "ScanningArray: " + name);
-        for (int i = 0; i < array.length; i++) {
-            Log.d(TAG, "Выбранный элемент: \n" + array[i]);
+        for (String s : array) {
+            Log.d(TAG, "Выбранный элемент: \n" + s);
         }
     }
 
@@ -144,7 +117,6 @@ public class stopwatch extends Activity {
             chronometer.stop();
             pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
-//            showCurrentTime();
             showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
 
@@ -163,11 +135,6 @@ public class stopwatch extends Activity {
     private void showInfo(long totalMilliseconds) {
         // Seconds
         long totalSecs = totalMilliseconds / 1000;
-        // Show Info
-        long hours = totalSecs / 3600;
-        long minutes = (totalSecs % 3600) / 60;
-        long seconds = totalSecs % 60;
-
         totalSeconds = totalSecs;
         long wholeSeconds = (totalMilliseconds / 1000);
 
@@ -181,8 +148,8 @@ public class stopwatch extends Activity {
 
     public String buildStringFromArray(String[] array) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            builder.append(array[i]);
+        for (String s : array) {
+            builder.append(s);
             builder.append(DELIMITER);
         }
         return builder.toString();
@@ -193,7 +160,7 @@ public class stopwatch extends Activity {
         super.onStop();
 //        saveData();
         Log.d(TAG, "onStop: Destroying!");
-        if(!running){
+        if (!running) {
             finish();
         }
     }
@@ -207,7 +174,8 @@ public class stopwatch extends Activity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        sentCategories = savedInstanceState.getStringArray("savedArray");
+        //
+        String[] sentCategories = savedInstanceState.getStringArray("savedArray");
         Log.d(TAG, "onRestoreInstanceState: Scanning saved array");
         ScanArray(sentCategories, "saved sentCategories");
     }
