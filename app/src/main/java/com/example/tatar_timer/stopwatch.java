@@ -15,25 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tatar_timer.sampledata.CategoryBdHelper;
+import com.example.tatar_timer.sampledata.HLP_Class;
+import com.example.tatar_timer.sampledata.Second_DB;
 
 
 public class stopwatch extends Activity {
     private static String currentCategoryName = "Категория не выбрана!"; //Это тоже должно.
     private Button chooseCategory;
     private TextView tv_currentCategory;
-    private long totalSeconds = 0; //Это пойдет в БД
     private static final String TAG = "myLogs";
     private Chronometer chronometer;
     private boolean running;
-    private long pauseOffSet;
+    private long pauseOffSet; //Время таймера. Нужно к нему прировнять
     private final String[] arrayOfCategories = {"Прогулка", "Учеба", "Спорт"}; //Стандратный массив. Отправляем если у нас нет сохраненных массивов
     private final String[] defaultArray = {"Прогулка", "Учеба", "Спорт"};
     CategoryBdHelper dbHelper;
+    Second_DB second_db;
     SharedPreferences savedString;
-    private final String DELIMITER = "%_%";
-    private String  loadedString;
+    private String loadedString;
 
-//test commit
+    //test commit
     private void toaster(String text) {
         Toast toast = Toast.makeText(getApplicationContext(),
                 text, Toast.LENGTH_SHORT);
@@ -54,9 +55,11 @@ public class stopwatch extends Activity {
         Log.d(TAG, "onCreate: Started StopWatch activity");
         init();
         Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
+        second_db = new Second_DB(this); //Adding Falito's DB
 
         String[] loadedCategories = null; //Массив, который заполнится если мы найдем сохранненные файлы
         loadData();
+        String DELIMITER = "%_%";
         if (loadedString != null) {
             Log.d(TAG, "Loaded string is " + loadedString);
             loadedCategories = loadedString.split(DELIMITER);
@@ -69,7 +72,7 @@ public class stopwatch extends Activity {
 
             ScanArray(receivedArray, "Массив получен от прошлого активити");
             goToList.putExtra("categoryArray", receivedArray);
-            saveData(buildStringFromArray(receivedArray));
+            saveData(HLP_Class.buildStringFromArray(receivedArray, DELIMITER));
 
         } else if (loadedCategories != null) { //Если нет, то проверяем наличие сохраненного списка
             ScanArray(loadedCategories, "Получили сохраненный массив"); //Выводим его в логи
@@ -82,12 +85,12 @@ public class stopwatch extends Activity {
         View.OnClickListener goToListYES = v -> startActivity(goToList);
         chooseCategory.setOnClickListener(goToListYES);
 
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                //ПРи каждом тики можем выполнять действия
-            }
-        });
+//        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+//            @Override
+//            public void onChronometerTick(Chronometer chronometer) {
+//                //ПРи каждом тики можем выполнять действия
+//            }
+//        });
 
 
     }
@@ -113,29 +116,29 @@ public class stopwatch extends Activity {
     }
 
     public void pauseChronometer(View v) {
+        Bundle bundle = getIntent().getExtras();
         if (running) {
             chronometer.stop();
             pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
             showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
-
+        second_db.putDataMilliOnly(5, SystemClock.elapsedRealtime() - chronometer.getBase() , bundle.getString("ChosenActivity"));
     }
 
-    public void resetChronometer(View v) {
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        pauseOffSet = 0;
-    }
-
-    private void showCurrentTime() {
-        long elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
-        toaster(String.valueOf(elapsedTime));
-    }
+//    public void resetChronometer(View v) {
+//        chronometer.setBase(SystemClock.elapsedRealtime());
+//        pauseOffSet = 0;
+//    }
+//
+//    private void showCurrentTime() {
+//        long elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+//        toaster(String.valueOf(elapsedTime));
+//    }
 
     private void showInfo(long totalMilliseconds) {
         // Seconds
         long totalSecs = totalMilliseconds / 1000;
-        totalSeconds = totalSecs;
         long wholeSeconds = (totalMilliseconds / 1000);
 
         if (totalMilliseconds < wholeSeconds) {
@@ -146,23 +149,20 @@ public class stopwatch extends Activity {
         toaster("Всего прошло секунд: " + totalSecs);
     }
 
-    public String buildStringFromArray(String[] array) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : array) {
-            builder.append(s);
-            builder.append(DELIMITER);
-        }
-        return builder.toString();
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        saveData();
         Log.d(TAG, "onStop: Destroying!");
-        if (!running) {
+        if (pauseOffSet == 0){
             finish();
         }
+        else{
+            if (!running) {
+                finish();
+            }
+        }
+        //Сохранение добавить на стоп
     }
 
     @Override
@@ -180,6 +180,7 @@ public class stopwatch extends Activity {
         ScanArray(sentCategories, "saved sentCategories");
     }
 
+    //Методы для SharedPreferences
     private void saveData(String newString) {
         savedString = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = savedString.edit();
