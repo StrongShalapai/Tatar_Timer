@@ -2,6 +2,7 @@ package com.example.tatar_timer;
 
 import androidx.annotation.NonNull;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,18 +19,28 @@ import com.example.tatar_timer.sampledata.CategoryBdHelper;
 import com.example.tatar_timer.sampledata.HLP_Class;
 import com.example.tatar_timer.sampledata.Second_DB;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+//import inm.project.pomodoro.Second_DB;
+
 
 public class stopwatch extends Activity {
     private static String currentCategoryName = "Категория не выбрана!"; //Это тоже должно.
     private Button chooseCategory;
-    private TextView tv_currentCategory;
+    private TextView tv_currentCategory, textView_startTime, textView_endTime;
     private static final String TAG = "myLogs";
     private Chronometer chronometer;
     private boolean running;
+    private int minutesStart, hoursStart, minutesEnd, hoursEnd;
     private long pauseOffSet; //Время таймера. Нужно к нему прировнять
     private final String[] arrayOfCategories = {"Прогулка", "Учеба", "Спорт"}; //Стандратный массив. Отправляем если у нас нет сохраненных массивов
     private final String[] defaultArray = {"Прогулка", "Учеба", "Спорт"};
-    CategoryBdHelper dbHelper;
+    @SuppressLint("SimpleDateFormat")
+    DateFormat hoursFormat = new SimpleDateFormat("k");
+    @SuppressLint("SimpleDateFormat")
+    DateFormat minutesFormat = new SimpleDateFormat("m");
+    //    CategoryBdHelper dbHelper;
     Second_DB second_db;
     SharedPreferences savedString;
     private String loadedString;
@@ -44,8 +55,12 @@ public class stopwatch extends Activity {
     private void init() {
         tv_currentCategory = findViewById(R.id.tvCurrentCategory);
         chooseCategory = findViewById(R.id.btn_chooseCategory1);
-        dbHelper = new CategoryBdHelper(this);
+//        dbHelper = new CategoryBdHelper(this);
         chronometer = findViewById(R.id.chronometer);
+        textView_startTime = findViewById(R.id.tv_startTime);
+        textView_startTime.setVisibility(View.INVISIBLE);
+        textView_endTime = findViewById(R.id.tv_endTime);
+        textView_endTime.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -105,25 +120,68 @@ public class stopwatch extends Activity {
         } else {
             toaster("Выберите категорию!");
         }
+        Date currentDate = new Date();
+        //Попробуем получить текущее время.
+        if (!currentCategoryName.equals("Категория не выбрана!")) {
+            textView_startTime.setVisibility(View.VISIBLE);
+            String currentTime = "Время запуска: " + hoursFormat.format(currentDate) +
+                    ":" +
+                    minutesFormat.format(currentDate);
+            textView_startTime.setText(currentTime);
+        }
+        try {
+            minutesStart = Integer.parseInt(minutesFormat.format(currentDate));
+            hoursStart = Integer.parseInt(hoursFormat.format(currentDate));
+        } catch (NullPointerException e) {
+            minutesStart = -1;
+            hoursStart = -1;
+            Log.d(TAG, "startChronometer: ОШИБКА НАХУЙ!");
+//            finish();
+        }
+
+
     }
 
-    private void ScanArray(String[] array, String name) {
-        Log.d(TAG, "ScanArray: Started");
-        Log.d(TAG, "ScanningArray: " + name);
-        for (String s : array) {
-            Log.d(TAG, "Выбранный элемент: \n" + s);
-        }
-    }
 
     public void pauseChronometer(View v) {
+
         Bundle bundle = getIntent().getExtras();
+        String currentActivity = "null";
+        if (bundle != null) {
+            currentActivity = bundle.getString("ChosenActivity");
+        }
         if (running) {
             chronometer.stop();
             pauseOffSet = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
             showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
-        second_db.putDataMilliOnly(5, SystemClock.elapsedRealtime() - chronometer.getBase() , bundle.getString("ChosenActivity"));
+        Date currentDate = new Date();
+        if (!currentCategoryName.equals("Категория не выбрана!")) {
+            String currentTime = "Время отключения: " + hoursFormat.format(currentDate) +
+                    ":" +
+                    minutesFormat.format(currentDate);
+            textView_endTime.setText(currentTime);
+            textView_endTime.setVisibility(View.VISIBLE);
+        }
+        if (pauseOffSet != 0) {
+            try {
+                minutesEnd = Integer.parseInt(minutesFormat.format(currentDate));
+                hoursEnd = Integer.parseInt(hoursFormat.format(currentDate));
+            } catch (NullPointerException e) {
+                minutesEnd = -1;
+                hoursEnd = -1;
+                Log.d(TAG, "startChronometer: ОШИБКА НАХУЙ!");
+                finish();
+            }
+            long mil = SystemClock.elapsedRealtime() - chronometer.getBase();
+            Log.d(TAG, "pauseChronometer Puttied data: " + mil + " '" + currentActivity + "' " + hoursStart
+                    + ":" + minutesStart + " " + hoursEnd + ":" + minutesEnd);
+            second_db.putDataMilliOnly(5, mil,
+                    currentActivity, hoursStart, minutesStart, hoursEnd, minutesEnd);
+        }
+///     private int minutesStart, hoursStart, minutesEnd, hoursEnd;
+//        second_db.putDataMilliOnly(5, SystemClock.elapsedRealtime() - chronometer.getBase() , bundle.getString("ChosenActivity"));
     }
 
 //    public void resetChronometer(View v) {
@@ -135,6 +193,14 @@ public class stopwatch extends Activity {
 //        long elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
 //        toaster(String.valueOf(elapsedTime));
 //    }
+
+    private void ScanArray(String[] array, String name) {
+        Log.d(TAG, "ScanArray: Started");
+        Log.d(TAG, "ScanningArray: " + name);
+        for (String s : array) {
+            Log.d(TAG, "Выбранный элемент: \n" + s);
+        }
+    }
 
     private void showInfo(long totalMilliseconds) {
         // Seconds
@@ -154,13 +220,12 @@ public class stopwatch extends Activity {
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop: Destroying!");
-        if (pauseOffSet == 0){
+        if (pauseOffSet == 0 && !running) {
             finish();
-        }
-        else{
-            if (!running) {
-                finish();
-            }
+//        } else {
+//            if (!running) {
+//                finish();
+//            }
         }
         //Сохранение добавить на стоп
     }

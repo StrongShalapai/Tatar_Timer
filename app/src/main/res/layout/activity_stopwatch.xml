@@ -52,6 +52,19 @@
             android:text="@string/stop"
             android:textSize="@dimen/standartText" />
 
+        <TextView
+            android:id="@+id/tv_startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textSize="@dimen/bigText" />
+
+        <TextView
+            android:id="@+id/tv_endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textSize="@dimen/bigText" />
 
         <LinearLayout
             android:layout_width="match_parent"

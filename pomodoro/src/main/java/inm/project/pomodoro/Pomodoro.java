@@ -46,7 +46,7 @@ public class Pomodoro extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_study:
                     new Thread(new Runnable() {
                         @Override
@@ -87,12 +87,11 @@ public class Pomodoro extends AppCompatActivity {
                     }).start();
                     break;
                 case R.id.btn_launch:
-                    if(!click){
+                    if (!click) {
                         startThreadNew();
                         click = true;
                         btn_launch.setText("стоп");
-                    }
-                    else{
+                    } else {
                         stopThread();
                         click = false;
                         btn_launch.setText("запуск");
@@ -109,7 +108,7 @@ public class Pomodoro extends AppCompatActivity {
         }
     };
 
-    public void init(){
+    public void init() {
         tv_timer = findViewById(R.id.tv_timer);
         btn_study = findViewById(R.id.btn_study);
         btn_relax = findViewById(R.id.btn_relax);
@@ -137,13 +136,13 @@ public class Pomodoro extends AppCompatActivity {
     }
 
     public void startThreadNew() {
-        if(reset){
+        if (reset) {
             phase2 = 0;
         }
-        if(minutes == 0 && seconds == 2){
+        if (minutes == 0 && seconds == 2) {
             work = true;
         }
-        if(seconds != 2){
+        if (seconds != 2) {
             work = false;
         }
         stopThread = false;
@@ -151,27 +150,27 @@ public class Pomodoro extends AppCompatActivity {
             @Override
             public void run() {
                 for (int i = 0; i < secs; i++) {
-                    if(stopThread) {return;}
+                    if (stopThread) {
+                        return;
+                    }
                     try {
                         check = check + 1;
                         Thread.sleep(100);
-                        if(seconds / 10 == 0 && seconds != 0) {
+                        if (seconds / 10 == 0 && seconds != 0) {
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     tv_timer.setText(minutes + ":0" + seconds);
                                 }
                             });
-                        }
-                        else if(seconds == 0){
+                        } else if (seconds == 0) {
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     tv_timer.setText(minutes + ":00");
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -180,16 +179,20 @@ public class Pomodoro extends AppCompatActivity {
                             });
                         }
                         //secs = secs - 1;
-                        if(check % 10 == 0) {
+                        if (check % 10 == 0) {
                             time = time + 1;
                             time_full = time_full - 1;
                             minutes = time_full / 60;
                             seconds = time_full - minutes * 60;
                         }
-                        if(minutes == 0 && seconds == 0){
+                        if (minutes == 0 && seconds == 0) {
                             //phase = phase + 1;
-                            if(work){work = false; phase2 = phase2 + 1;}
-                            else{work = true;}
+                            if (work) {
+                                work = false;
+                                phase2 = phase2 + 1;
+                            } else {
+                                work = true;
+                            }
                             phaseChoose(phase2);
                             stopThread();
                             click = false;
@@ -213,7 +216,7 @@ public class Pomodoro extends AppCompatActivity {
         stopThread = true;
     }
 
-    public void phaseChoose(int a){
+    public void phaseChoose(int a) {
         /*if(a % 2 != 0){
             minutes = 25; seconds = 0;
             minutes = 0; seconds = 2;
@@ -226,14 +229,17 @@ public class Pomodoro extends AppCompatActivity {
             //minutes = 15; seconds = 0;
             minutes = 0; seconds = 4;
         }*/
-        if(!work && a % 4 != 0){
-            minutes = 5; seconds = 0;
+        if (!work && a % 4 != 0) {
+            minutes = 5;
+            seconds = 0;
         }
-        if(!work && a % 4 == 0){
-            minutes = 15; seconds = 0;
+        if (!work && a % 4 == 0) {
+            minutes = 15;
+            seconds = 0;
         }
-        if(work){
-            minutes = 25; seconds = 0;
+        if (work) {
+            minutes = 25;
+            seconds = 0;
         }
         mainHandler.post(new Runnable() {
             @Override
@@ -246,7 +252,7 @@ public class Pomodoro extends AppCompatActivity {
         secs = time_full * 10;
     }
 
-    public void showAlertDialog(int id){
+    public void showAlertDialog(int id) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Прогресс");
         alert.setMessage("Вы точно хотите сбросить свой прогресс?\t " +
@@ -266,20 +272,23 @@ public class Pomodoro extends AppCompatActivity {
         alert.create().show();
     }
 
-    public void resetProgress(int id){
+    public void resetProgress(int id) {
         stopThread();
-        switch(id){
+        switch (id) {
             case R.id.btn_study:
-                minutes = 25; seconds = 0;
+                minutes = 25;
+                seconds = 0;
                 //minutes = 0; seconds = 2;
                 break;
             case R.id.btn_relax:
-                minutes = 5; seconds = 0;
+                minutes = 5;
+                seconds = 0;
                 //minutes = 0; seconds = 3;
                 reset = true;
                 break;
             case R.id.btn_long:
-                minutes = 15; seconds = 0;
+                minutes = 15;
+                seconds = 0;
                 //minutes = 0; seconds = 4;
                 reset = true;
                 break;
@@ -302,19 +311,20 @@ public class Pomodoro extends AppCompatActivity {
         });
     }
 
-    public void sendDataSDB(int number, String activity, int time,
+/*    public void sendDataSDB(int number, String activity, int time,
                             int hours, int minutes){
         boolean info = sdb.putData(number,activity,time,hours,minutes);
-        if (info) {
-            toastMessage("Data Successfully Inserted!");
+       if (info) {
+           toastMessage("Data Successfully Inserted!");
         } else {
             toastMessage("Something went wrong");
         }
-    }
+   }
+*/
 
     public void sendDataFDB(int day, int month, int year, int study,
-                            int total, int number, int visibility){
-        boolean info = fdb.putData(day,month,year,study,total,number,visibility);
+                            int total, int number, int visibility) {
+        boolean info = fdb.putData(day, month, year, study, total, number, visibility);
         if (info) {
             toastMessage("Data Successfully Inserted!");
         } else {
@@ -322,14 +332,14 @@ public class Pomodoro extends AppCompatActivity {
         }
     }
 
-    public void toastMessage(String message){
-        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+    public void toastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     //cамый важный фрагмент кода здесь
-    public void check(Cursor data, int day, int month, int year, int seconds){
+    public void check(Cursor data, int day, int month, int year, int seconds) {
         //sendDataFDB(day, month, year, seconds, 1, 1, 1);
-        if(data.moveToFirst()) {
+        if (data.moveToFirst()) {
             Log.d(TAG, "moved to first");
             for (int i = 0; i < fdb.getProfilesCount(); i = i + 1) {
                 if (data.getInt(1) == day && data.getInt(2) == month
@@ -341,14 +351,13 @@ public class Pomodoro extends AppCompatActivity {
                     data.moveToNext();
                 }
             }
-        }
-        else{
+        } else {
             sendDataFDB(day, month, year, 0, 0, 1, 1);
             Log.d(TAG, "all zeros");
         }
     }
 
-    public void test(){
+    public void test() {
         Cursor data = fdb.getData();
         new Thread(new Runnable() {
             @Override
@@ -366,7 +375,7 @@ public class Pomodoro extends AppCompatActivity {
         }).start();
     }
 
-    public int[] getFromSP(){
+    public int[] getFromSP() {
         int[] array = new int[3];
         SharedPreferences sp = getSharedPreferences("pomodoro_file", MODE_PRIVATE);
         array[0] = sp.getInt("minutes", 25);
@@ -375,7 +384,7 @@ public class Pomodoro extends AppCompatActivity {
         return array;
     }
 
-    public void toSP(int minutes, int seconds, int number){
+    public void toSP(int minutes, int seconds, int number) {
         SharedPreferences sp = getSharedPreferences("pomodoro_file", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("minutes", minutes);
@@ -387,10 +396,9 @@ public class Pomodoro extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(!stopThread){
+        if (!stopThread) {
             toSP(minutes, seconds, number_for_DB);
-        }
-        else{
+        } else {
             toSP(25, 0, number_for_DB);
         }
     }
@@ -404,7 +412,7 @@ public class Pomodoro extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!background) {
+        if (!background) {
             array = getFromSP();
             minutes = array[0];
             seconds = array[1];
@@ -415,16 +423,15 @@ public class Pomodoro extends AppCompatActivity {
         }
     }
 
-    public void setText(){
-        if(seconds % 10 == 0){
+    public void setText() {
+        if (seconds % 10 == 0) {
             tv_timer.setText(minutes + ":0" + seconds);
-        }
-        else{
+        } else {
             tv_timer.setText(minutes + ":" + seconds);
         }
     }
 
-    public void applySettings(){
+    public void applySettings() {
         SharedPreferences sp = getSharedPreferences("settings", MODE_PRIVATE);
         background = sp.getBoolean("background", true);
     }
