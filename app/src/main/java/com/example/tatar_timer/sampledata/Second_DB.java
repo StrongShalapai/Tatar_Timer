@@ -11,7 +11,7 @@ public class Second_DB extends SQLiteOpenHelper {
     private static final String COL0 = "id";
     private static final String COL1 = "number";
     private static final String COL2 = "activity";
-    private static final String COL3 = "time";
+    private static final String COL3 = "time"; //seconds
     private static final String COL4 = "hours";
     private static final String COL5 = "minutes";
 

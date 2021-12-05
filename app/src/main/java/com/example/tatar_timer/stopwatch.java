@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tatar_timer.sampledata.CategoryBdHelper;
+import com.example.tatar_timer.sampledata.HLP_Class;
+import com.example.tatar_timer.sampledata.Second_DB;
 
 
 public class stopwatch extends Activity {
@@ -29,11 +31,12 @@ public class stopwatch extends Activity {
     private final String[] arrayOfCategories = {"Прогулка", "Учеба", "Спорт"}; //Стандратный массив. Отправляем если у нас нет сохраненных массивов
     private final String[] defaultArray = {"Прогулка", "Учеба", "Спорт"};
     CategoryBdHelper dbHelper;
+    Second_DB second_db;
     SharedPreferences savedString;
     private final String DELIMITER = "%_%";
-    private String  loadedString;
+    private String loadedString;
 
-//test commit
+    //test commit
     private void toaster(String text) {
         Toast toast = Toast.makeText(getApplicationContext(),
                 text, Toast.LENGTH_SHORT);
@@ -54,6 +57,7 @@ public class stopwatch extends Activity {
         Log.d(TAG, "onCreate: Started StopWatch activity");
         init();
         Intent goToList = new Intent(stopwatch.this, CategoryChooseActivity.class);
+        second_db = new Second_DB(this); //Adding Kalitov's DB
 
         String[] loadedCategories = null; //Массив, который заполнится если мы найдем сохранненные файлы
         loadData();
@@ -69,7 +73,7 @@ public class stopwatch extends Activity {
 
             ScanArray(receivedArray, "Массив получен от прошлого активити");
             goToList.putExtra("categoryArray", receivedArray);
-            saveData(buildStringFromArray(receivedArray));
+            saveData(HLP_Class.buildStringFromArray(receivedArray, DELIMITER));
 
         } else if (loadedCategories != null) { //Если нет, то проверяем наличие сохраненного списка
             ScanArray(loadedCategories, "Получили сохраненный массив"); //Выводим его в логи
@@ -146,14 +150,6 @@ public class stopwatch extends Activity {
         toaster("Всего прошло секунд: " + totalSecs);
     }
 
-    public String buildStringFromArray(String[] array) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : array) {
-            builder.append(s);
-            builder.append(DELIMITER);
-        }
-        return builder.toString();
-    }
 
     @Override
     protected void onStop() {
