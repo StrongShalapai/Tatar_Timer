@@ -33,7 +33,7 @@ public class stopwatch extends Activity {
     private final String DELIMITER = "%_%";
     private String  loadedString;
 
-
+//test commit
     private void toaster(String text) {
         Toast toast = Toast.makeText(getApplicationContext(),
                 text, Toast.LENGTH_SHORT);
