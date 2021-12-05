@@ -123,7 +123,7 @@ public class stopwatch extends Activity {
             running = false;
             showInfo(SystemClock.elapsedRealtime() - chronometer.getBase());
         }
-        second_db.putData(5, SystemClock.elapsedRealtime() - chronometer.getBase() , bundle.getString("ChosenActivity"));
+        second_db.putDataMilliOnly(5, SystemClock.elapsedRealtime() - chronometer.getBase() , bundle.getString("ChosenActivity"));
     }
 
 //    public void resetChronometer(View v) {

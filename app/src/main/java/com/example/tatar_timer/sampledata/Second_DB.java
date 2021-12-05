@@ -82,7 +82,7 @@ public class Second_DB extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void putData(int number, long milliseconds, String activity) {
+    public void putDataMilliOnly(int number, long milliseconds, String activity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, number);
